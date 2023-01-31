@@ -77,6 +77,9 @@ Okay! Sorry for all of those words! Now we’re going to write code.
 This is going to be a very basic little 'game' where we can make a bird fly up and down. We’ll start with a mostly empty template, then we’ll add one section at a time.
 
 ``` python
+# Tells Python that we're using the pygame library, so it knows
+# that when you say 'pygame' later, you're talking about the
+# library, and not just some other variable called 'pygame'.
 import pygame
 
 # All the code for our game goes inside this function:
@@ -97,12 +100,16 @@ This code should run and successfully do nothing without crashing. Incredible! N
 
 ``` python
 def main():
+    # Pygame wants u to always do this.
     pygame.init()
 
+    # Opens a window
     screen = pygame.display.set_mode((256, 144))
 
+    # Keeps our game running at a consistent FPS
     clock = pygame.time.Clock()
 
+    # Load some images
     bg = pygame.image.load("assets/images/bg.png")
     bird = pygame.image.load("assets/images/bird.png")
 ```
@@ -137,6 +144,10 @@ Now if you run the game, it should *still* do nothing (although a window might f
 ``` python
     # Loop
     while True:
+        # We ask the game to aim for 60fps and it tells us
+        # how many milliseconds have passed since last frame.
+        # We convert it to seconds (divide by 1000) because
+        # they're easier to work with.
         dt = clock.tick(60) / 1000
 
         # Input phase
@@ -161,8 +172,10 @@ Starting with the Input phase - all we want to be able to do is make our bird fl
         if event.type == pygame.QUIT:
             break
 
+        # Gives us a mapping of whether each key is being pressed.
         keys = pygame.key.get_pressed()
 
+        # `flying = True` only if space is pressed
         flying = keys[pygame.K_SPACE]
 
         # Let's test the input state before we move on.
@@ -178,11 +191,14 @@ Now that we have confidence in our input, we can move to the Update phase. Here,
 ``` python
         # Update phase
 
+        # Apply gravity to the bird's velocity (scaled by time)
         bird_velocity += gravity * dt
 
+        # If we're flying, set the velocity to go up instead
         if flying:
             bird_velocity = -flight_speed
 
+        # Apply the velocity to the bird's position (scaled by time)
         bird_y += bird_velocity * dt
 
         # Now we can validate our game state by seeing how these
@@ -199,8 +215,12 @@ And now that we have our game state, and hopefully it seems correct based on the
 ``` python
         # Draw phase
 
+        # Draw the background with it's top-left corner at the
+        # top-left of the window.
         screen.blit(bg, (0, 0))
 
+        # Draw the bird at 112px from the left, and its Y-position
+        # based on the game state.
         screen.blit(bird, (112, bird_y))
 ```
 
@@ -210,7 +230,7 @@ This may not be the most *exciting* output, but hopefully it illustrates how eac
 
 ## Optional extra credit - Keeping the bird on-screen:
 
-This isn’t vital to the rest of things, but it was bothering me and it might be bothering you too. Plus it’s a good opportunity to *edit* our code, and debug it with `print` if anything seems like it doesn’t work.
+This isn’t vital to the rest of things, but it was bothering me that the bird can go off the top and bottom of the screen. It might be bothering you too! Plus it’s a good opportunity to *edit* our code, and debug it with `print` if anything seems like it doesn’t work.
 
 Firstly, let’s add some new constants to set the floor and ceiling heights (`0` is the top, and `120` is just a little above the bottom, to account for the height of the bird itself):
 
@@ -294,7 +314,7 @@ end
 
 Riiight okay, so I mixed up the floor and ceiling here! Because zero is at the top, the floor is the *higher* number, not the lower!
 
-So when I say `max(floor_y, bird_y)` it *always* gives me back `floor_y`. And vice versa for the `min`. And because the `min` comes second, it *always* results in `ceiling_y`.
+So when I say `max(floor_y, bird_y)` it *always* gives me back `floor_y`. And vice versa for the `min`. And because the `min` comes second, it *always* results in `ceiling_y`! e.g, zero!
 
 This isn’t a contrived example either, I legitimately made this mistake and included debugging it.
 
@@ -306,9 +326,11 @@ Here’s the fixed version:
 
         bird_y += bird_velocity * dt
 
+        # Stop the velocity if the bird is off-screen
         if bird_y < ceiling_y or bird_y > floor_y:
             bird_velocity = 0
 
+        # Clamp the bird's position to be on-screen
         bird_y = min( max(ceiling_y, bird_y), floor_y)
 ```
 
@@ -321,3 +343,5 @@ We’ve experienced the downsides of it first-hand, but there *are* upsides in m
 2.  We aren’t duplicating the `bird_velocity = 0` code anymore. Before, we included it in two separate `if` statements. That’s not *inherently* bad? But repeating code in multiple places makes it harder to change later. You have to remember to change it in *every* place. Not only that, but I could have easily forgotten to put it in one of those two branches, and confuse myself later when the velocity only *sometimes* resets.
 
 Don’t worry too much about this part though. I’m explaining my own thought process, but I cannot stress enough: either approach works and neither is wrong. Pick the one that’s easiest for you unless you find a good reason to change.
+
+And you can (and should!) just copy-paste the working code and move on if this isn’t making sense. It’s better to spend time learning and making interesting stuff, than getting hung up on minor implementation details.

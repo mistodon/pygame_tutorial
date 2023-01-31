@@ -1,4 +1,5 @@
 :is_blog:
+:sourcepart: 1
 
 # Structuring a Game
 
@@ -273,7 +274,7 @@ This may not be the most _exciting_ output, but hopefully it illustrates how eac
 
 ## Optional extra credit - Keeping the bird on-screen:
 
-This isn't vital to the rest of things, but it was bothering me and it might be bothering you too. Plus it's a good opportunity to _edit_ our code, and debug it with `print` if anything seems like it doesn't work.
+This isn't vital to the rest of things, but it was bothering me that the bird can go off the top and bottom of the screen. It might be bothering you too! Plus it's a good opportunity to _edit_ our code, and debug it with `print` if anything seems like it doesn't work.
 
 Firstly, let's add some new constants to set the floor and ceiling heights (`0` is the top, and `120` is just a little above the bottom, to account for the height of the bird itself):
 
@@ -362,7 +363,7 @@ end
 
 Riiight okay, so I mixed up the floor and ceiling here! Because zero is at the top, the floor is the _higher_ number, not the lower!
 
-So when I say `max(floor_y, bird_y)` it _always_ gives me back `floor_y`. And vice versa for the `min`. And because the `min` comes second, it _always_ results in `ceiling_y`.
+So when I say `max(floor_y, bird_y)` it _always_ gives me back `floor_y`. And vice versa for the `min`. And because the `min` comes second, it _always_ results in `ceiling_y`! e.g, zero!
 
 This isn't a contrived example either, I legitimately made this mistake and included debugging it.
 
@@ -397,3 +398,5 @@ We've experienced the downsides of it first-hand, but there _are_ upsides in my 
 2. We aren't duplicating the `bird_velocity = 0` code anymore. Before, we included it in two separate `if` statements. That's not _inherently_ bad? But repeating code in multiple places makes it harder to change later. You have to remember to change it in _every_ place. Not only that, but I could have easily forgotten to put it in one of those two branches, and confuse myself later when the velocity only _sometimes_ resets.
 
 Don't worry too much about this part though. I'm explaining my own thought process, but I cannot stress enough: either approach works and neither is wrong. Pick the one that's easiest for you unless you find a good reason to change.
+
+And you can (and should!) just copy-paste the working code and move on if this isn't making sense. It's better to spend time learning and making interesting stuff, than getting hung up on minor implementation details.
