@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -eu
+set -o pipefail
+
+cd _dont_look_here
+
+asciidoctor --destination-dir ../code doc/code/*.adoc
+
+function translate {
+    local infile=$1
+    local outfile=$2
+    asciidoctor -b docbook5 -a leveloffset=+1 -o - "$infile" | pandoc --markdown-headings=atx --wrap=preserve -t gfm -f docbook - | sed -E '/^(tag|end)::[a-z0-9_]*\[\]/d' | sed 's/\\\[^\([0-9][0-9]*\)\\\]/[^\1]/g' > "$outfile"
+}
+
+for part in $(ls doc/tutorials/*.adoc); do
+    translate $part "../tutorials/$(basename ${part%.*}).md"
+done

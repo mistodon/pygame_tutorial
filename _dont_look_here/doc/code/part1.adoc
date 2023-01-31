@@ -1,0 +1,35 @@
+:doctype: inline
+:outfilesuffix: .py
+:sourcepart: 1
+
+++++
+include::../tutorials/part1.adoc[tag=imports]
+
+include::../tutorials/part1.adoc[tag=main_def]
+include::../tutorials/part1.adoc[tag=setup]
+
+include::../tutorials/part1.adoc[tag=constants]
+
+include::../tutorials/part1.adoc[tag=input_state]
+
+include::../tutorials/part1.adoc[tag=game_state]
+
+include::../tutorials/part1.adoc[tag=loop_start]
+
+
+include::../tutorials/part1.adoc[tag=input_phase]
+
+
+include::../tutorials/part1.adoc[tag=update_phase]
+
+include::../tutorials/part1.adoc[tag=bird_y_clamp]
+
+
+include::../tutorials/part1.adoc[tag=draw_phase]
+
+
+include::../tutorials/part1.adoc[tag=loop_end]
+
+
+include::../tutorials/part1.adoc[tag=weird_main]
+++++
