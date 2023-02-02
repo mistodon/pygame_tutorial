@@ -5,14 +5,20 @@
 ++++
 include::../tutorials/part1.adoc[tag=imports]
 
+
 include::../tutorials/part1.adoc[tag=main_def]
 include::../tutorials/part1.adoc[tag=setup]
+include::../tutorials/part2.adoc[tag=life_images]
+
+include::../tutorials/part2.adoc[tag=load_font]
 
 include::../tutorials/part1.adoc[tag=constants]
 
 include::../tutorials/part1.adoc[tag=input_state]
 
 include::../tutorials/part1.adoc[tag=game_state]
+include::../tutorials/part2.adoc[tag=life_state]
+include::../tutorials/part2.adoc[tag=score_state]
 
 include::../tutorials/part1.adoc[tag=loop_start]
 
@@ -21,11 +27,18 @@ include::../tutorials/part1.adoc[tag=input_phase]
 
 
 include::../tutorials/part1.adoc[tag=update_phase]
+include::../tutorials/part2.adoc[tag=score_update]
 
-include::../tutorials/part1.adoc[tag=bird_y_clamp]
+include::../tutorials/part2.adoc[tag=bird_y_clamp]
+
+include::../tutorials/part2.adoc[tag=reset_scores]
 
 
 include::../tutorials/part1.adoc[tag=draw_phase]
+
+include::../tutorials/part2.adoc[tag=draw_lives]
+
+include::../tutorials/part2.adoc[tag=draw_score]
 
 
 include::../tutorials/part1.adoc[tag=loop_end]

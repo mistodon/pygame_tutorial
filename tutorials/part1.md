@@ -8,7 +8,9 @@
 
 Okay, we’re going to make a game in Python. And it’s not important what *kind* of game it is just yet, or what components will be *in* the game. For now, we just want to get the overall structure right.
 
-Before we actually write any code, let’s talk about some of the reasons we’re going to structure it the way we are.
+You can find all the code for these tutorials [here](https://github.com/mistodon/pygame_tutorial/archive/refs/heads/main.zip) and you can find the finished code for this part [here](https://github.com/mistodon/pygame_tutorial/blob/main/code/part1.py). If you want to skip to the final product and play around with it, feel free! Otherwise, read on to see how we got there.
+
+But before we actually write any code, let’s talk about some of the reasons we’re going to structure it the way we are.
 
 **Reason \#1: Games are really complicated and have so many moving parts!**
 
@@ -133,7 +135,7 @@ And then to finish our Setup, we need to initialise the **game state** too. This
 
 ``` python
     # Game state
-    bird_y = 0
+    bird_y = 72
     bird_velocity = 0
 ```
 
@@ -168,12 +170,13 @@ Starting with the Input phase - all we want to be able to do is make our bird fl
 
 ``` python
         # Input phase
-        event = pygame.event.poll()
-        if event.type == pygame.QUIT:
-            break
 
         # Gives us a mapping of whether each key is being pressed.
         keys = pygame.key.get_pressed()
+
+        event = pygame.event.poll()
+        if event.type == pygame.QUIT:
+            break
 
         # `flying = True` only if space is pressed
         flying = keys[pygame.K_SPACE]

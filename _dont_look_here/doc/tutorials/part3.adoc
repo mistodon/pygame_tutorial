@@ -1,0 +1,5 @@
+:is_blog:
+:sourcepart: 3
+
+# Bigger modes
+

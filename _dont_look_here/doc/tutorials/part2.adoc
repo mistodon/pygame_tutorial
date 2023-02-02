@@ -1,0 +1,322 @@
+:is_blog:
+:sourcepart: 2
+
+# Modes
+
+
+## Life counter for a lose condition
+
+[source,python]
+----
+    bg = pygame.image.load("assets/images/bg.png")
+    bird = pygame.image.load("assets/images/bird.png")
+
+    # Two new images to load:
+tag::life_images[]
+    life_empty = pygame.image.load("assets/images/life_empty.png")
+    life_full = pygame.image.load("assets/images/life_full.png")
+end::life_images[]
+----
+
+[source,python]
+----
+    bird_y = 72
+    bird_velocity = 0
+
+    # Two new images to load:
+tag::life_state[]
+    lives = 3
+end::life_state[]
+----
+
+[source,python]
+----
+    bird_y = 0
+    bird_velocity = 0
+
+    # Two new images to load:
+tag::life_state[]
+    lives = 3
+end::life_state[]
+----
+
+
+Update this:
+
+[source,python]
+----
+        if bird_y < ceiling_y or bird_y > floor_y:
+            bird_velocity = 0
+----
+
+to this:
+
+[source,python]
+----
+tag::bird_y_clamp[]
+        if bird_y < ceiling_y or bird_y > floor_y:
+            bird_velocity = 0
+            lives -= 1
+            bird_y = 72
+end::bird_y_clamp[]
+
+        print(f"lives = {lives}")
+----
+
+Now drawing those lives:
+
+[source,python]
+----
+        screen.blit(life_full, (0, 0))
+        screen.blit(life_full, (32, 0))
+        screen.blit(life_full, (64, 0))
+----
+
+[source,python]
+----
+        image = life_full if lives > 0 else life_empty
+        screen.blit(image, (0, 0))
+
+        image = life_full if lives > 1 else life_empty
+        screen.blit(image, (32, 0))
+
+        image = life_full if lives > 2 else life_empty
+        screen.blit(image, (64, 0))
+----
+
+[source,python]
+----
+tag::draw_lives[]
+        for index in range(3):
+            x_position = index * 32
+            image = life_full if lives > index else life_empty
+            screen.blit(image, (x_position, 0))
+end::draw_lives[]
+----
+
+## Just for fun: scoring
+
+[source,python]
+----
+tag::load_font[]
+    font = pygame.font.SysFont("arial", 24, True)
+end::load_font[]
+----
+
+[source,python]
+----
+    bird_y = 0
+    bird_velocity = 0
+    lives = 3
+
+    # This
+tag::score_state[]
+    score = 0
+end::score_state[]
+----
+
+[source,python]
+----
+        bird_y += bird_velocity * dt
+
+        # Add score based on speed:
+tag::score_update[]
+        score += int(abs(bird_velocity) * dt)
+end::score_update[]
+
+        print(f"score = {score}")
+----
+
+[source,python]
+----
+tag::draw_score[]
+        score_label = font.render(str(score), True, (32, 32, 32))
+        screen.blit(score_label, (160, 0))
+end::draw_score[]
+----
+
+Now finally, let's reset the score and lives on a game over.
+
+[source,python]
+----
+tag::reset_scores[]
+        if lives <= 0:
+            lives = 3
+            score = 0
+end::reset_scores[]
+----
+
+But that's really jarring! Let's make some changes.
+
+## Three Modes
+
+> Note: We're switching to part2b.py
+
+Three modes:
+
+1. Waiting to start.
+2. Playing.
+3. Game over.
+
+
+[source,python]
+----
+tag::mode_constants[]
+WAITING_MODE = 0
+PLAYING_MODE = 1
+GAMEOVER_MODE = 2
+end::mode_constants[]
+----
+
+[source,python]
+----
+tag::current_mode[]
+    current_mode = WAITING_MODE
+end::current_mode[]
+----
+
+
+[source,python]
+----
+tag::input_state[]
+    # Input state
+    button_held = False
+    button_pressed = False
+end::input_state[]
+----
+
+
+[source,python]
+----
+tag::input_phase[]
+        # Input phase
+        keys = pygame.key.get_pressed()
+
+        # We're renaming 'flying' to 'button_held'
+        button_held = keys[pygame.K_SPACE]
+
+        # And we need 'button_pressed' defaults to False
+        button_pressed = False
+
+        event = pygame.event.poll()
+        if event.type == pygame.QUIT:
+            break
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            button_pressed = True
+end::input_phase[]
+----
+
+[source,python]
+----
+        # Make sure you update this elsewhere!
+        if button_held:
+            bird_velocity = -flight_speed
+----
+
+Now we want to make our controls/gravity _only_ work during play mode:
+
+[source,python]
+----
+        # Update phase
+        if current_mode == PLAYING_MODE:
+            bird_velocity += gravity * dt
+
+            if button_held:
+                bird_velocity = -flight_speed
+
+            bird_y += bird_velocity * dt
+            score += int(abs(bird_velocity) * dt)
+
+            if bird_y < ceiling_y or bird_y > floor_y:
+                bird_velocity = 0
+                lives -= 1
+                bird_y = 72
+
+            if lives <= 0:
+                lives = 3
+                score = 0
+----
+
+But we started in waiting mode, so this won't do anything! Let's add another branch in our update, specifically for handling waiting mode:
+
+[source,python]
+----
+        # Update phase
+        if current_mode == WAITING_MODE:
+            if button_pressed:
+                current_mode = PLAYING_MODE
+
+        elif current_mode == PLAYING_MODE:
+            bird_velocity += gravity * dt
+
+            if button_held:
+                bird_velocity = -flight_speed
+
+            bird_y += bird_velocity * dt
+            score += int(abs(bird_velocity) * dt)
+
+            if bird_y < ceiling_y or bird_y > floor_y:
+                bird_velocity = 0
+                lives -= 1
+                bird_y = 72
+
+            if lives <= 0:
+                lives = 3
+                score = 0
+----
+
+Okay now let's go to a game over when we run out of lives, instead of resetting straight away:
+
+[source,python]
+----
+            if lives <= 0:
+                current_mode = GAMEOVER_MODE
+----
+
+Let's draw something when we get a game over too:
+
+[source,python]
+----
+tag::draw_gameover[]
+        if current_mode == GAMEOVER_MODE:
+            gameover_label = font.render("GAME OVER", True, (250, 32, 32))
+            screen.blit(gameover_label, (50, 60))
+end::draw_gameover[]
+----
+
+And then one last change to let us get out of game over mode:
+
+[source,python]
+----
+tag::update_phase[]
+        # Update phase
+        if current_mode == WAITING_MODE:
+            if button_pressed:
+                current_mode = PLAYING_MODE
+
+        elif current_mode == PLAYING_MODE:
+            bird_velocity += gravity * dt
+
+            if button_held:
+                bird_velocity = -flight_speed
+
+            bird_y += bird_velocity * dt
+            score += int(abs(bird_velocity) * dt)
+
+            if bird_y < ceiling_y or bird_y > floor_y:
+                bird_velocity = 0
+                lives -= 1
+                bird_y = 72
+
+            if lives <= 0:
+                current_mode = GAMEOVER_MODE
+
+        elif current_mode == GAMEOVER_MODE:
+            if button_pressed:
+                current_mode = WAITING_MODE
+                lives = 3
+                score = 0
+end::update_phase[]
+----
+
+

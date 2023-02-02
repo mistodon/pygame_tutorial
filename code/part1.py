@@ -1,5 +1,6 @@
 import pygame
 
+
 def main():
     # Pygame wants u to always do this.
     pygame.init()
@@ -24,7 +25,7 @@ def main():
     flying = False
 
     # Game state
-    bird_y = 0
+    bird_y = 72
     bird_velocity = 0
 
     # Loop
@@ -37,12 +38,13 @@ def main():
 
 
         # Input phase
-        event = pygame.event.poll()
-        if event.type == pygame.QUIT:
-            break
 
         # Gives us a mapping of whether each key is being pressed.
         keys = pygame.key.get_pressed()
+
+        event = pygame.event.poll()
+        if event.type == pygame.QUIT:
+            break
 
         # `flying = True` only if space is pressed
         flying = keys[pygame.K_SPACE]
