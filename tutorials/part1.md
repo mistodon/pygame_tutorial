@@ -8,7 +8,13 @@
 
 Okay, we’re going to make a game in Python. And it’s not important what *kind* of game it is just yet, or what components will be *in* the game. For now, we just want to get the overall structure right.
 
-You can find all the code for these tutorials [here](https://github.com/mistodon/pygame_tutorial/archive/refs/heads/main.zip) and you can find the finished code for this part [here](https://github.com/mistodon/pygame_tutorial/blob/main/code/part1.py). If you want to skip to the final product and play around with it, feel free! Otherwise, read on to see how we got there.
+You can download all the code for these tutorials [here](https://github.com/mistodon/pygame_tutorial/archive/refs/heads/main.zip). This download contains the images used by the game too. You can also find the finished code for this part [here](https://github.com/mistodon/pygame_tutorial/blob/main/code/part1.py). If you want to skip to the final product and play around with it, feel free! Otherwise, read on to see how we got there.
+
+> Another quick note: the code here expects a certain file structure. The code to be in `code/` and the images to be in `assets/images/`.
+>
+> If you’re using the command line, you would need to use `python code/part1.py` to run it.
+>
+> If you’re using an editor Visual Studio Code, you’ll need to open the entire `pygame_tutorial` folder, and run `part1.py`, to ensure that the editor can see both the code and images in the right place.
 
 But before we actually write any code, let’s talk about some of the reasons we’re going to structure it the way we are.
 
@@ -189,6 +195,8 @@ Starting with the Input phase - all we want to be able to do is make our bird fl
 
 When you run the game, you should see a constant repeating line of `flying = False` in the terminal. But if you hold the space key while the game window is in focus, you should see it change to `flying = True` until you let go.
 
+The `f` before the string inside the print function makes it a *format* string. It’s like a template, where any code inside the `{curly brackets}` is replaced with whatever value the code results in.
+
 Now that we have confidence in our input, we can move to the Update phase. Here, we want our bird to fall with gravity. But, if we’re currently flying, we want to go up instead:
 
 ``` python
@@ -299,11 +307,15 @@ Let me just…​ split that complicated line up and check in between…​
 
         # Split floor and ceiling caps, checking the value in between
         print("start")
+
         print(f"bird_y = {bird_y}")
+
         bird_y = max(floor_y, bird_y)
         print(f"bird_y = {bird_y}")
+
         bird_y = min(bird_y, ceiling_y)
         print(f"bird_y = {bird_y}")
+
         print("end")
 ```
 
@@ -348,3 +360,7 @@ We’ve experienced the downsides of it first-hand, but there *are* upsides in m
 Don’t worry too much about this part though. I’m explaining my own thought process, but I cannot stress enough: either approach works and neither is wrong. Pick the one that’s easiest for you unless you find a good reason to change.
 
 And you can (and should!) just copy-paste the working code and move on if this isn’t making sense. It’s better to spend time learning and making interesting stuff, than getting hung up on minor implementation details.
+
+So that’s it for now! We didn’t do anything *super* exciting here - but it’s a good framework to build on.
+
+Next time we’re going to mess around with slightly more interactivity, and slightly more varied game states, by adding an actual lose condition, a simple game over screen, and a restart button. Which will also give us the opportunity to go back to our code and make more complicated edits too.
